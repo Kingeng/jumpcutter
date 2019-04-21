@@ -46,7 +46,7 @@ parser.add_argument('--output_file', type=str, default="",
                     help="the output file. (optional. if not included, it'll just modify the input file name)")
 parser.add_argument('--silent_threshold', type=float, default=0.03,
                     help="the volume amount that frames' audio needs to surpass to be consider \"sounded\". It ranges from 0 (silence) to 1 (max volume)")
-parser.add_argument('--sounded_speed', type=float, default=1.60,
+parser.add_argument('--sounded_speed', type=float, default=1.50,
                     help="the speed that sounded (spoken) frames should be played at. Typically 1.")
 parser.add_argument('--silent_speed', type=float, default=5.00,
                     help="the speed that silent frames should be played at. 999999 for jumpcutting.")
@@ -86,7 +86,7 @@ def runIt(frameRate, SAMPLE_RATE, SILENT_THRESHOLD, FRAME_SPREADAGE, NEW_SPEED, 
     if len(args.output_file) >= 1:
         OUTPUT_FILE = args.output_file
     else:
-        OUTPUT_FILE = inputToOutputFilename(str(INPUT_FILE).split("/")[-1])
+        OUTPUT_FILE = inputToOutputFilename(str(INPUT_FILE))
 
     TEMP_FOLDER = tempfile.mkdtemp()
     # smooth out transitiion's audio by quickly fading in/out (arbitrary magic number whatever)
@@ -222,7 +222,14 @@ elif INPUT_FILE != None:
 
 elif input_dir != "":
     print(input_dir)
-    videos = glob.glob(str(input_dir).replace('\\', '') + "*.mp4")
+    videos = []
+    for root, _, files in os.walk(input_dir):
+        for name in files:
+            (base, ext) = os.path.splitext(name) # split base and extension
+            if ext == ".mp4":
+                videos.append(root+"/"+base+ext)
+            else:
+                pass
     print("**********************************************************************")
     print("{} mp4 files founded.".format(len(videos)))
     print("**********************************************************************")
