@@ -8,3 +8,5 @@ with some fast changes (based on my needs):
   3. Fix for paths that include spaces 
 
 It works on PopOS 18.04
+
+now it can search all subdirs for `.mp4` files
